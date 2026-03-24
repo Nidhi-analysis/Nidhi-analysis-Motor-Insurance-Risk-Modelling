@@ -1,262 +1,196 @@
-# Motor Insurance Claim Frequency Modelling
+# Event Frequency Modelling using GLMs (Insurance Case Study)
 
-A statistical modelling project to predict motor insurance claim frequency using GLMs, demonstrating the transition from Poisson to Negative Binomial due to overdispersion.
-
-**Keywords:** Actuarial Science, GLM, Risk Modelling, Insurance Analytics, Machine Learning, Python
-
-![Driver Age Risk](visuals/driver_age_risk.png)
-
-## Table of Contents
-
-- Problem Statement
-- Project Objectives
-- Dataset
-- Methodology
-- Model Results
-- Key Findings
-- Visualisations
-- Project Structure
-- How to Run the Project
-- Tools & Libraries
-
-## Key Results (Quick Summary)
-
-- Overdispersion detected (Dispersion ≈ 2.77)
-- Negative Binomial model outperforms Poisson
-- AIC improved by ~910 points
-- RMSE ≈ 0.55 indicating reasonable predictive accuracy
-- Bonus-Malus is the strongest predictor of claim frequency
-
-
-This project performs an actuarial analysis of motor insurance claim frequency using the **freMTPL2 dataset**.
-The objective is to identify key risk factors influencing claim frequency and to build statistical models used in insurance pricing.
-
-The analysis focuses on **exposure-adjusted claim frequency**, risk segmentation, and **Generalized Linear Models (GLM)** commonly used in actuarial practice.
+A statistical modelling project focused on predicting event frequency (count data) using exposure-adjusted Generalized Linear Models (GLMs). The project demonstrates handling of overdispersion and model selection using Poisson and Negative Binomial approaches on a real-world insurance dataset.
 
 ---
 
-# Problem Statement
+## Executive Summary
 
-Motor insurance companies must estimate the expected number of claims in order to price policies accurately and manage risk effectively.
+* Built an exposure-adjusted claim frequency model using GLMs on the freMTPL2 dataset
+* Identified overdispersion in claim counts (dispersion ≈ 2.77), violating Poisson assumptions
+* Improved model performance using a Negative Binomial model
+* Compared models using AIC and RMSE, showing better fit under overdispersion
+* Evaluated predictive performance using train-test validation and calibration
+* Identified key risk drivers: Bonus-Malus, Driver Age, Vehicle Age, and Population Density
 
-Claim frequency depends on several policyholder and vehicle characteristics such as driver age, vehicle age, bonus-malus level, and geographic density. Understanding how these factors impact claim frequency is a key component of actuarial risk modelling.
-
-This project aims to analyse motor insurance claim data and build statistical models to estimate claim frequency while accounting for policy exposure using actuarial modelling techniques.
-
----
-
-# Project Objectives
-
-- Perform data-driven risk analysis using statistical and machine learning concepts
-
-The main objectives of this project are:
-
-* Explore motor insurance claim data
-* Calculate exposure-adjusted claim frequencies
-* Identify important risk factors affecting claims
-* Perform risk segmentation across policyholder characteristics
-* Fit statistical models for claim frequency
-* Evaluate model performance and assumptions
-
+This project demonstrates how count-based modelling techniques can be applied to real-world risk and event prediction problems.
 
 ---
 
-# Dataset
+## Key Results
 
-The project uses the **freMTPL2 dataset**, a widely used motor insurance dataset for actuarial modelling research.
-
-Key variables include:
-
-* **ClaimNb** – number of claims
-* **Exposure** – policy exposure period
-* **DriverAge** – age of the driver
-* **VehAge** – age of the vehicle
-* **VehPower** – vehicle power category
-* **BonusMalus** – bonus-malus level
-* **Density** – population density of the area
-
-Claim frequency is calculated as:
-
-```
-Claim Frequency = Claims / Exposure
-```
+* Dispersion Statistic: 2.77 (strong overdispersion)
+* Poisson AIC: 288817
+* Negative Binomial AIC: 287907
+* RMSE (validation): ~0.55
+* Negative Binomial model selected due to better fit
+* Bonus-Malus identified as the strongest predictor
+* Model predictions align well with observed values across segments
 
 ---
 
-# Methodology
+## Problem Statement
 
-The analysis follows a typical actuarial modelling workflow.
-
-### 1. Exploratory Data Analysis
-
-Initial exploration of the dataset to understand the distribution of claims and key policy characteristics.
-
-### 2. Risk Segmentation
-
-Claim frequencies are analysed across multiple rating factors:
-
-* Driver age bands
-* Vehicle age bands
-* Vehicle power categories
-* Bonus-malus levels
-* Population density groups
-
-This helps identify how claim risk varies across different policyholder segments.
-
-### 3. Claim Frequency Modelling
-
-A Poisson regression model is first fitted under the assumption that mean = variance. This assumption is later tested using an overdispersion test.
-
-### 4. Model Validation
-
-Predicted claim frequencies are compared with observed frequencies across risk segments to evaluate model performance.
-
-### 5. Overdispersion Testing
-
-An overdispersion test is conducted to check whether the Poisson assumption *(variance = mean)* holds.
-
-### 6. Alternative Model
-
-Due to detected overdispersion, a **Negative Binomial regression model** is fitted as a more flexible alternative.
-
-Model performance is compared using the **Akaike Information Criterion (AIC)**.
-
-The Negative Binomial model relaxes the restrictive Poisson assumption by allowing variance to exceed the mean.
----
-
-# Model Results
-
-Two statistical models were fitted to estimate claim frequency and their performance was compared.
-
-| Model | AIC |
-|------|------|
-| Poisson Regression | 288817 |
-| Negative Binomial Regression | 287907 |
-
-Model validation using the RMSE metric produced:
-
-RMSE (Observed vs Predicted Frequency): **0.5457**
-
-This indicates that the model captures overall claim frequency patterns reasonably well despite inherent variability in insurance data.
-
-Since the **Negative Binomial model has a lower AIC**, it provides a better fit for the claim frequency data.
-
-This improvement is expected because the Negative Binomial model accounts for **overdispersion**, which is commonly observed in insurance claim data.
+Many real-world problems involve predicting how often an event occurs rather than whether it occurs. This project models claim frequency using count-based statistical methods, accounting for varying exposure and addressing overdispersion in the data.
 
 ---
 
-# Key Findings
+## Methodology
 
-* Young drivers (18–25) exhibit the highest claim frequency.
-* Claim frequency generally decreases with increasing driver age.
-* Higher bonus-malus levels are strongly associated with increased claim risk.
-* Policies located in high-density areas tend to have higher claim frequencies.
-* The Poisson model showed evidence of **overdispersion**.
-* The **Negative Binomial model** provided a better fit than the Poisson model.
+**Exploratory Analysis**
 
-- Model results align with actuarial intuition, increasing confidence in model reliability.
+* Claim count distribution and sparsity
+* Identification of skewness and zero-inflation characteristics
+
+**Risk Segmentation**
+
+* Driver Age
+* Vehicle Age
+* Bonus-Malus
+* Vehicle Power
+* Population Density
+
+**Modelling Approach**
+
+* Poisson Regression (baseline model)
+* Overdispersion testing
+* Negative Binomial Regression (final model)
+
 ---
 
-## Visualisations
+## Model Comparison
 
-Example visual outputs generated in this project.
+| Model             | AIC    |
+| ----------------- | ------ |
+| Poisson           | 288817 |
+| Negative Binomial | 287907 |
 
-### Claim Count Distribution
+The Negative Binomial model provides a better fit as it accounts for overdispersion (variance exceeding the mean), which violates the Poisson assumption.
 
-This plot shows the distribution of claim counts across policies.  
-Most policies have zero claims, while higher claim counts occur much less frequently, resulting in a highly skewed distribution typical in insurance datasets.
+---
 
+## Model Validation
+
+* Train-test split used for out-of-sample evaluation
+* RMSE used as performance metric
+* Calibration analysis performed across risk segments
+
+Predicted frequencies closely match observed values, indicating good model calibration and generalization.
+
+---
+
+## Key Insights
+
+* Young drivers (18–25) exhibit the highest claim frequency
+* Claim frequency decreases with driver age
+* Bonus-Malus is the strongest predictor of claim frequency
+* Higher population density is associated with increased claim frequency
+* Vehicle age shows a decreasing relationship with risk
+
+---
+
+## Business Impact
+
+This model can support:
+
+* Risk-based pricing and premium setting
+* Underwriting decisions and risk selection
+* Portfolio monitoring and segmentation
+* Identification of high-risk customer groups
+
+The approach enables more data-driven decision making in risk and pricing strategies.
+
+---
+
+## Cross-Domain Applicability
+
+The methodology is applicable beyond insurance:
+
+* Banking: default or delinquency frequency modelling
+* Business analytics: customer event frequency
+* Operations: incident and failure rate modelling
+
+---
+
+## Visual Highlights
+
+Claim Count Distribution
 ![Claim Count Distribution](visuals/claim_count_distribution.png)
 
-### Claim Frequency by Driver Age
-
-This plot illustrates how claim frequency varies across driver age groups. Younger drivers typically exhibit higher claim frequencies, reflecting increased risk associated with limited driving experience.
-
+Driver Age Risk
 ![Driver Age Risk](visuals/driver_age_risk.png)
 
-### Observed vs Predicted Claim Frequency
+Model Validation
+![Model Validation](visuals/model_validation_driver_age.png)
 
-This chart compares observed claim frequencies with the frequencies predicted by the GLM model across driver age bands.
+---
 
-![Observed vs Predicted Claim Frequency](visuals/model_validation_driver_age.png)
+## Project Structure
 
-Most predicted values align closely with observed values, indicating good model calibration across driver age segments.
+```
+event-frequency-modelling-glm/
+
+├── data/
+├── notebooks/
+├── src/
+│   ├── preprocessing.py
+│   ├── eda.py
+│   ├── modeling.py
+│   ├── evaluation.py
+│   └── utils.py
+├── outputs/
+├── visuals/
+├── README.md
+└── requirements.txt
+```
+
+---
+
+## Skills Demonstrated
+
+* Statistical modelling using GLMs
+* Poisson and Negative Binomial regression
+* Overdispersion detection and handling
+* Model validation and calibration
+* Risk segmentation
+* Translation of statistical results into business insights
+
 ---
 
 ## Limitations
 
-- The GLM framework assumes independence between observations
-- Interaction effects between variables are not explicitly modelled
-- The dispersion parameter is not directly estimated in the current implementation
+* Interaction effects not explicitly modelled
+* Severity modelling not included
+* Assumes independence between observations
 
+---
 
 ## Future Improvements
 
-- Estimate dispersion parameter explicitly
-- Explore interaction effects between risk factors
-- Apply regularization or machine learning models for comparison
-- Extend analysis to claim severity modelling
-
-
-# Project Structure
-
-```
-Motor-Insurance-Risk-Modelling
-│
-├── data
-│   └── freMTPL2.csv
-│
-├── notebooks
-│   └── motor_claim_frequency_analysis.ipynb
-│
-├── visuals
-│   └── *.png
-│
-├── requirements.txt
-├── .gitignore
-└── README.md
-```
+* Incorporate interaction effects
+* Extend to claim severity modelling
+* Compare with machine learning approaches
+* Improve calibration diagnostics
 
 ---
 
-# How to Run the Project
+## How to Run
 
-Clone the repository
+Clone the repository:
 
-```
-git clone https://github.com/Nidhi-analysis/motor-insurance-risk-modelling.git
-```
+git clone <https://github.com/Nidhi-analysis/event-frequency-modelling-GLM.git>
 
-Install dependencies
+Install dependencies:
 
-```
 pip install -r requirements.txt
-```
 
-Open the notebook
+Run the notebook:
 
-```
 notebooks/motor_claim_frequency_analysis.ipynb
-```
-
-Run the notebook cells to reproduce the analysis.
 
 ---
 
-# Tools & Libraries
+## Author
 
-This project was implemented using Python with the following libraries:
-
-* pandas
-* numpy
-* matplotlib
-* seaborn
-* statsmodels
-
----
-
-# Author
-
-**Nidhi Sharma**
-
-Aspiring Actuarial Analyst with strong interest in risk modelling, GLMs, and insurance analytics. Skilled in translating statistical insights into business-relevant conclusions.
+Nidhi Sharma
+Aspiring Actuarial / Data Analyst with interest in risk modelling, GLMs, and analytics
