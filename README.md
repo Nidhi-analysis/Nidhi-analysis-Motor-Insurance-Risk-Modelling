@@ -132,7 +132,6 @@ event-frequency-modelling-glm/
 
 ├── data/
 ├── notebooks/
-├── src/
 ├── outputs/
 ├── visuals/
 ├── README.md
