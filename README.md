@@ -133,11 +133,6 @@ event-frequency-modelling-glm/
 ├── data/
 ├── notebooks/
 ├── src/
-│   ├── preprocessing.py
-│   ├── eda.py
-│   ├── modeling.py
-│   ├── evaluation.py
-│   └── utils.py
 ├── outputs/
 ├── visuals/
 ├── README.md
